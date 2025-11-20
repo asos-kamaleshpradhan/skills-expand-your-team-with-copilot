@@ -911,16 +911,36 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     } else if (classList.contains("share-copy")) {
       // Copy link to clipboard
-      const textToCopy = `${activityName} - ${activityUrl}`;
-      navigator.clipboard
-        .writeText(textToCopy)
-        .then(() => {
+      const textToCopy = `${shareText}\n\n${activityUrl}`;
+      
+      // Check if clipboard API is available
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            showMessage("Link copied to clipboard!", "success");
+          })
+          .catch((err) => {
+            console.error("Failed to copy:", err);
+            showMessage("Failed to copy link", "error");
+          });
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
           showMessage("Link copied to clipboard!", "success");
-        })
-        .catch((err) => {
+        } catch (err) {
           console.error("Failed to copy:", err);
-          showMessage("Failed to copy link", "error");
-        });
+          showMessage("Failed to copy link. Please copy manually.", "error");
+        }
+        document.body.removeChild(textArea);
+      }
     }
   }
 
