@@ -887,29 +887,29 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Handle social sharing
-  function handleShare(classList, activityName, details) {
+  function handleShare(shareType, activityName, details) {
     const formattedSchedule = formatSchedule(details);
     const activityUrl = `${window.location.origin}${window.location.pathname}`;
     const shareText = `Check out ${activityName} at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(activityUrl);
 
-    if (classList.contains("share-facebook")) {
+    if (shareType.contains("share-facebook")) {
       // Facebook sharing
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
       window.open(facebookUrl, "_blank", "width=600,height=400");
-    } else if (classList.contains("share-twitter")) {
+    } else if (shareType.contains("share-twitter")) {
       // Twitter sharing
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
       window.open(twitterUrl, "_blank", "width=600,height=400");
-    } else if (classList.contains("share-email")) {
+    } else if (shareType.contains("share-email")) {
       // Email sharing
       const subject = encodeURIComponent(`${activityName} at Mergington High School`);
       const body = encodeURIComponent(
         `I wanted to share this activity with you:\n\n${activityName}\n\n${details.description}\n\nSchedule: ${formattedSchedule}\n\nView more details: ${activityUrl}`
       );
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    } else if (classList.contains("share-copy")) {
+    } else if (shareType.contains("share-copy")) {
       // Copy link to clipboard
       const textToCopy = `${shareText}\n\n${activityUrl}`;
       
@@ -925,10 +925,11 @@ document.addEventListener("DOMContentLoaded", () => {
             showMessage("Failed to copy link", "error");
           });
       } else {
-        // Fallback for older browsers
+        // Fallback for legacy browsers (document.execCommand is deprecated)
         const textArea = document.createElement("textarea");
         textArea.value = textToCopy;
         textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
         textArea.style.opacity = "0";
         document.body.appendChild(textArea);
         textArea.select();
