@@ -358,6 +358,62 @@ button {
   overflow: hidden;
 }
 
+/* Share buttons */
+.share-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
+  margin-top: 8px;
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.share-btn {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.share-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.share-facebook:hover {
+  background-color: #1877f2;
+  border-color: #1877f2;
+}
+
+.share-twitter:hover {
+  background-color: #1da1f2;
+  border-color: #1da1f2;
+}
+
+.share-email:hover {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.share-copy:hover {
+  background-color: var(--success);
+  border-color: var(--success);
+}
+
 .skeleton-line {
   height: 10px;
   margin-bottom: 8px;

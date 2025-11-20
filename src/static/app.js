@@ -552,6 +552,21 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <button class="share-btn share-facebook" data-activity="${name}" title="Share on Facebook">
+          📘
+        </button>
+        <button class="share-btn share-twitter" data-activity="${name}" title="Share on Twitter">
+          🐦
+        </button>
+        <button class="share-btn share-email" data-activity="${name}" title="Share via Email">
+          📧
+        </button>
+        <button class="share-btn share-copy" data-activity="${name}" title="Copy link">
+          🔗
+        </button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -586,6 +601,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const shareButtons = activityCard.querySelectorAll(".share-btn");
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const activityName = button.dataset.activity;
+        handleShare(button.classList, activityName, details);
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -860,6 +885,44 @@ document.addEventListener("DOMContentLoaded", () => {
     setDayFilter,
     setTimeRangeFilter,
   };
+
+  // Handle social sharing
+  function handleShare(classList, activityName, details) {
+    const formattedSchedule = formatSchedule(details);
+    const activityUrl = `${window.location.origin}${window.location.pathname}`;
+    const shareText = `Check out ${activityName} at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(activityUrl);
+
+    if (classList.contains("share-facebook")) {
+      // Facebook sharing
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+      window.open(facebookUrl, "_blank", "width=600,height=400");
+    } else if (classList.contains("share-twitter")) {
+      // Twitter sharing
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+      window.open(twitterUrl, "_blank", "width=600,height=400");
+    } else if (classList.contains("share-email")) {
+      // Email sharing
+      const subject = encodeURIComponent(`${activityName} at Mergington High School`);
+      const body = encodeURIComponent(
+        `I wanted to share this activity with you:\n\n${activityName}\n\n${details.description}\n\nSchedule: ${formattedSchedule}\n\nView more details: ${activityUrl}`
+      );
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    } else if (classList.contains("share-copy")) {
+      // Copy link to clipboard
+      const textToCopy = `${activityName} - ${activityUrl}`;
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          showMessage("Link copied to clipboard!", "success");
+        })
+        .catch((err) => {
+          console.error("Failed to copy:", err);
+          showMessage("Failed to copy link", "error");
+        });
+    }
+  }
 
   // Initialize app
   checkAuthentication();
